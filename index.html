@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Bootstrap required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>Compatibilidad entre elementos</title>
+
+        <!-- Bootstrap 4 -->
+        <link rel="stylesheet"
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+              crossorigin="anonymous">
+
+        <!-- FontAwesome -->
+        <link rel="stylesheet" 
+              href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+              integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+              crossorigin="anonymous">
+
+        <!-- Librería de animaciones CSS -->
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+        <!-- Hojas de estilo en cascada -->
+        <link rel="stylesheet" 
+              href="css/app.css">
+    </head>
+    <body>
+        <div id="app"
+             class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="page-header">
+                        <h1>{{ appName }}</h1>
+                    </div>
+                    <h2>{{ appDesc }}</h2>
+                    <div id="rulesPanel"
+                         class="alert alert-info"
+                         role="alert">
+                        <h3>Reglas:</h3>
+                        <ul>
+                            <li v-for="rule in rules">
+                                <strong>{{ rule.mainText }}</strong>&nbsp;
+                                {{ rule.secondaryText }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="configPanel"
+                         class="row">
+                        <div class="col-md-4"
+                             v-bind:id="elem.id"
+                             v-for="elem in elements">
+                            <div class="jumbotron">
+                                <h4>
+                                    <i v-for="iconSlug in elem.fontAwesomeIcons"
+                                       class="fas"
+                                       v-bind:class="iconSlug"></i><br>
+                                    <strong>{{ elem.name }}</strong>, compatible con:
+                                </h4>
+                                <div v-bind:id="elem.id + 'CompatibleElements'">
+                                    <div v-for="compatibleElem in elements"
+                                         v-if="compatibleElem.id !== elem.id">
+                                        <input type="checkbox"
+                                               :disabled="isIncompatible(elem.id, compatibleElem.id) || isCircularConnection(elem.id, compatibleElem.id)"
+                                               v-bind:id="elem.id + 'CompatibleWith' + compatibleElem.id"
+                                               v-bind:value="compatibleElem.id"
+                                               v-model="elem.compatibleElementIds"
+                                               v-on:click="calcVirtualTotal(elem.id, compatibleElem.id, $event)">
+                                        <label v-bind:for="elem.id + 'CompatibleWith' + compatibleElem.id">
+                                            {{ compatibleElem.name }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="elementsView"
+                         class="row">
+                        <div class="col-md-4"
+                             v-bind:id="elem.id + 'View'"
+                             v-for="elem in elements"
+                             class="elements-view">
+                            <h4>
+                                <strong>{{ elem.name }}</strong>
+                            </h4>
+                            <div class="row">
+                                <div class="col-lg-8 elements">
+                                    <button type="button"
+                                            class="btn btn-dark animated"
+                                            v-for="num in elem.quantity">
+                                            <i v-for="iconSlug in elem.fontAwesomeIcons"
+                                               class="fas"
+                                               v-bind:class="iconSlug"></i>
+                                    </button>
+                                </div>
+                                <div class="col-lg-4 totals">
+                                    <div>
+                                        <span class="total">Total real:</span><br>
+                                        <span class="badge badge-info">{{ elem.quantity }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="total">Total virtual:</span><br>
+                                        <span class="badge badge-info">{{ elem.virtualQuantity }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vue.js JavaScript Framework -->
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.2/dist/vue.js"></script>
+
+        <!-- Lógica de la app con Vue.js -->
+        <script src="js/app.js"></script>
+
+        <!-- JavaScript necesario para que funcione Bootstrap 4 -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                crossorigin="anonymous"></script>
+    </body>
+</html>
+
